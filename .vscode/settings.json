@@ -1,0 +1,18 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#14313E",
+    "titleBar.activeBackground": "#1C4557",
+    "titleBar.activeForeground": "#F9FCFD"
+  },
+  "cSpell.words": [
+    "atrovan",
+    "bcrypt",
+    "dbname",
+    "gorm",
+    "jinzhu",
+    "negroni",
+    "postgres",
+    "remainer",
+    "stretchr"
+  ]
+}

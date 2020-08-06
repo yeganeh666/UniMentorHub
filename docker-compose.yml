@@ -1,0 +1,58 @@
+version: '3'
+services:
+    app:
+        container_name: atrovan_api
+        build: .
+        environment:
+            - GO_ENV=${GO_ENV}
+            - JWT_PRIVATE_KEY_PATH=private_key.pem
+            - JWT_PUBLIC_KEY_PATH=public_key.pub
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_DATABASE_HOST=${POSTGRES_DATABASE_HOST}
+            - REDIS_DATABASE_HOST=${REDIS_DATABASE_HOST}
+            - REDIS_PASSWORD=${REDIS_PASSWORD}
+        ports: 
+            - 8080:5000 
+        restart: on-failure
+        volumes:
+            - .:/usr/src/app/
+        depends_on:
+            - atrovan_postgres
+            - atrovan_redis
+        networks:
+            - atrovan_network
+
+
+    atrovan_postgres:
+        image: postgres:latest
+        container_name: ${POSTGRES_DATABASE_HOST}
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB}
+            - DATABASE_HOST=${POSTGRES_DATABASE_HOST} 
+        ports:
+            - '5432:5432'
+        volumes:
+            - database_postgres:/var/lib/postgresql/data
+        networks:
+            - atrovan_network
+    
+    atrovan_redis:
+        image: bitnami/redis:${REDIS_VERSION}
+        container_name: ${REDIS_DATABASE_HOST}
+        environment:
+            - REDIS_PASSWORD=${REDIS_PASSWORD}
+        networks:
+            - atrovan_network 
+
+volumes:
+    api:
+    database_postgres:
+
+# Networks to be created
+networks:
+    atrovan_network:
+        driver: bridge
